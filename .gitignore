@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# Logs and temporary files
+*.log
+analysis_output.txt
+test_output.txt
+probe_output.txt
+sync_log.txt
+date_debug.txt
+table_dump.txt
+link_check_results.txt
+columns_info.txt
+header_info.txt
+db_info.txt
+db_structure.txt
+result_addresses.txt
+result_addresses_utf8.txt
+
+# OS specific
+.DS_Store
+Thumbs.db

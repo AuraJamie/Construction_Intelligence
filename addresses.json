@@ -1,0 +1,544 @@
+{
+    "T6ZSXXSJI5I00": {
+        "address": "16 Stockton Lane York YO31 1BQ",
+        "agent": "Independent",
+        "decision_date": "29/01/26"
+    },
+    "T6DTARSJHZK00": {
+        "address": "25 Whin Road York YO24 1JZ",
+        "agent": "CA Architectural",
+        "decision_date": "23/01/26"
+    },
+    "T6CFA9SJHYO00": {
+        "address": "36 Moor Lane Strensall York YO32 5UQ",
+        "agent": "Independent",
+        "decision_date": "22/01/26"
+    },
+    "T6C9NKSJ0GB00": {
+        "address": "Lawnswood York Road Elvington York YO41 4DY",
+        "agent": "HB Drawing Services Ltd",
+        "decision_date": "27/01/26"
+    },
+    "T6ACAFSJHY200": {
+        "address": "12 Courtneys Wheldrake York YO19 6BR",
+        "agent": "CA Architectural",
+        "decision_date": "22/01/26"
+    },
+    "T69VNHSJHXV00": {
+        "address": "5 Moor Way Huntington York YO32 9QF",
+        "agent": "Independent",
+        "decision_date": "22/01/26"
+    },
+    "T69VN8SJHXT00": {
+        "address": "35 Linden Close Huntington York YO32 9RQ",
+        "agent": "Independent",
+        "decision_date": "20/01/26"
+    },
+    "T68KA2SJ0GB00": {
+        "address": "18 Garbutt Grove York YO26 5JE",
+        "agent": "HB Drawing Services Ltd",
+        "decision_date": "28/01/26"
+    },
+    "T62SNXSJ0HL00": {
+        "address": "53 Manor Park Road York YO30 5UJ",
+        "agent": "Not Available",
+        "decision_date": "26/01/26"
+    },
+    "T60M9FSJHV800": {
+        "address": "222 Beckfield Lane York YO26 5QS",
+        "agent": "A & J Architects",
+        "decision_date": "30/01/26"
+    },
+    "T5YRMZSJHUA00": {
+        "address": "115 Osbaldwick Lane York YO10 3AY",
+        "agent": "Carve Architecture",
+        "decision_date": "15/01/26"
+    },
+    "T5VR9USJHT400": {
+        "address": "6 Whitby Avenue York YO31 1EU",
+        "agent": "Constructive Individuals",
+        "decision_date": "23/01/26"
+    },
+    "T5VIYYSJHSX00": {
+        "address": "4 Knavesmire Crescent York YO23 1ES",
+        "agent": "Townscape Architects Limited",
+        "decision_date": "13/01/26"
+    },
+    "T5VLC5SJ0HL00": {
+        "address": "17 Oak Glade Huntington York YO31 9JW",
+        "agent": "HB Drawing Services Ltd",
+        "decision_date": "14/01/26"
+    },
+    "T5NVWLSJHQV00": {
+        "address": "1 Sherbourne Grove Strensall York YO32 5BG",
+        "agent": "CA Architectural",
+        "decision_date": "09/01/26"
+    },
+    "T5MHYQSJHQP00": {
+        "address": "2 Welwyn Drive York YO10 4LF",
+        "agent": "Independent",
+        "decision_date": "13/01/26"
+    },
+    "T5LSWSSJHQ600": {
+        "address": "1 Chatsworth Drive Haxby York YO32 3QS",
+        "agent": "Oaktree Architectural LTD",
+        "decision_date": "08/01/26"
+    },
+    "T5I3OASJHOM00": {
+        "address": "64 Montague Road Bishopthorpe York YO23 2SS",
+        "agent": "Architectural Services York",
+        "decision_date": "02/02/26"
+    },
+    "T5I3O4SJHOK00": {
+        "address": "89 North Moor Huntington York YO32 9RY",
+        "agent": "Architectural Services York",
+        "decision_date": "12/01/26"
+    },
+    "T5I3M7SJHO900": {
+        "address": "61 Garfield Terrace York YO26 4XT",
+        "agent": "BrierleygroomLLP",
+        "decision_date": "12/01/26"
+    },
+    "T59AXHSJHMG00": {
+        "address": "44 Heworth Road York YO31 0AD",
+        "agent": "JAWdesign",
+        "decision_date": "23/12/25"
+    },
+    "T58UAMSJHM900": {
+        "address": "15 Coppice Close Haxby York YO32 3RR",
+        "agent": "Independent",
+        "decision_date": "09/01/26"
+    },
+    "T57GAJSJHLR00": {
+        "address": "81 East Parade York YO31 7YD",
+        "agent": "Size Matters Technical Design Limited",
+        "decision_date": "15/01/26"
+    },
+    "T57G8XSJHLK00": {
+        "address": "Woodhouse Farm Lords Lane Nether Poppleton York YO26 6GQ",
+        "agent": "B.Planning Ltd",
+        "decision_date": "12/01/26"
+    },
+    "T577XMSJHLF00": {
+        "address": "4 The Spinney York YO24 1JP",
+        "agent": "JRB Designs Ltd.",
+        "decision_date": "14/01/26"
+    },
+    "T55TWTSJHL100": {
+        "address": "Beck House Moorlands Road Skelton York YO30 1XZ",
+        "agent": "81 North Architecture Limited",
+        "decision_date": "30/01/26"
+    },
+    "T55T5XSJ0HL00": {
+        "address": "18 Vicarage Lane Naburn York YO19 4RS",
+        "agent": "HB Drawing Services Ltd",
+        "decision_date": "06/01/26"
+    },
+    "T4UPXJSJHI600": {
+        "address": "5 Station Road Haxby York YO32 3LR",
+        "agent": "PPIY Limited",
+        "decision_date": "07/01/26"
+    },
+    "T4S6ACSJHGQ00": {
+        "address": "37 Heworth Road York YO31 0AA",
+        "agent": "Shepherd Technical Services",
+        "decision_date": "15/01/26"
+    },
+    "T4MJI1SJHG400": {
+        "address": "19A Holyrood Drive York YO30 5WB",
+        "agent": "RRAD",
+        "decision_date": "22/12/25"
+    },
+    "T4L5GVSJHFU00": {
+        "address": "80 Ridgeway York YO26 5DP",
+        "agent": "Paul Butler Architects Ltd.",
+        "decision_date": "19/12/25"
+    },
+    "T4JAUUSJHF800": {
+        "address": "49 Stockton Lane York YO31 1BP",
+        "agent": "Carve Architecture",
+        "decision_date": "19/12/25"
+    },
+    "T4J2H0SJHEZ00": {
+        "address": "May Cottage 44 Main Street Bishopthorpe York YO23 2RB",
+        "agent": "Walker Graham Architects",
+        "decision_date": "28/01/26"
+    },
+    "T4JA3ASJ0GB00": {
+        "address": "10 Barmby Avenue York YO10 4HX",
+        "agent": "Chartered Architect",
+        "decision_date": "23/12/25"
+    },
+    "T4H7SLSJHEE00": {
+        "address": "24 White House Dale York YO24 1EB",
+        "agent": "FIArchitects",
+        "decision_date": "22/12/25"
+    },
+    "T4F4UHSJHDG00": {
+        "address": "15 Temple Avenue York YO10 3RS",
+        "agent": "Not Available",
+        "decision_date": "16/12/25"
+    },
+    "T4FLJ5SJHDZ00": {
+        "address": "81 Maple Grove York YO10 4EJ",
+        "agent": "CA Architectural",
+        "decision_date": "16/12/25"
+    },
+    "T4A9V7SJHD800": {
+        "address": "12 Woodhouse Grove York YO31 0PS",
+        "agent": "Potential Homes",
+        "decision_date": "11/12/25"
+    },
+    "T4A1HOSJHCV00": {
+        "address": "18 Priory Street York YO1 6EX",
+        "agent": "Studio Tamacoco Architects",
+        "decision_date": "05/01/26"
+    },
+    "T4A1I2SJHCY00": {
+        "address": "9 Laburnum Garth York YO31 9LU",
+        "agent": "Paul Butler Architects Ltd.",
+        "decision_date": "11/12/25"
+    },
+    "T486SRSJHC700": {
+        "address": "12 Church Road Osbaldwick York YO10 3NW",
+        "agent": "Architectural Services York",
+        "decision_date": "11/12/25"
+    },
+    "T47Q5USJHBY00": {
+        "address": "8 Greenfield Park Drive York YO31 1JB",
+        "agent": "Size Matters Technical Design Limited",
+        "decision_date": "11/12/25"
+    },
+    "T45VH0SJHBN00": {
+        "address": "5 Moor Lane Copmanthorpe York YO23 3TJ",
+        "agent": "Size Matters Technical Design Limited",
+        "decision_date": "11/12/25"
+    },
+    "T44PUMSJHBG00": {
+        "address": "10 St Marys York YO30 7DD",
+        "agent": "Carve Architecture",
+        "decision_date": "16/12/25"
+    },
+    "T44PVJSJHBI00": {
+        "address": "77 Askham Lane York YO24 3HD",
+        "agent": "Abodhi Architects",
+        "decision_date": "10/12/25"
+    },
+    "T44HJBSJHBA00": {
+        "address": "10 The Horseshoe York YO24 1LX",
+        "agent": "Carve Architecture",
+        "decision_date": "10/12/25"
+    },
+    "T449ASSJHB000": {
+        "address": "Chestnut House Chestnut Court The Old Village Huntington York YO32 9RD",
+        "agent": "Carve Architecture",
+        "decision_date": "15/01/26"
+    },
+    "T448JOSJ0GB00": {
+        "address": "560 Huntington Road York YO32 9QA",
+        "agent": "Not Available",
+        "decision_date": "27/11/25"
+    },
+    "T42MTKSJHA500": "108 Tadcaster Road Dringhouses York YO24 1LT",
+    "T3WM62SJH9L00": "61 Whitby Avenue York YO31 1EU",
+    "T9VYX9SJIX100": {
+        "address": "Address not available",
+        "agent": "Independent"
+    },
+    "T9VXL5SJ0GB00": {
+        "address": "Address not available",
+        "agent": "Independent"
+    },
+    "T9VWHNSJ0GB00": {
+        "address": "Address not available",
+        "agent": "Independent"
+    },
+    "T9VQMFSJIWY00": {
+        "address": "Address not available",
+        "agent": "Independent"
+    },
+    "T9VI9SSJIWJ00": {
+        "address": "Address not available",
+        "agent": "Independent"
+    },
+    "T71VXWSJI6I00": {
+        "address": "Farmfoods 1 Odsal House Front Street York YO24 3BL",
+        "agent": "Cube PSL",
+        "decision_date": "03/02/26"
+    },
+    "T70HXUSJI6700": {
+        "address": "5 Elmlands Grove York YO31 1ED",
+        "agent": "The Planning & Design Associates",
+        "decision_date": "23/12/25"
+    },
+    "T6PDXSSJI3200": {
+        "address": "14 Western Terrace Station Avenue New Earswick York YO32 4BW",
+        "agent": "BSB Architecture",
+        "decision_date": "27/01/26"
+    },
+    "T6NJCPSJI2R00": {
+        "address": "White Cross Court Rehabilitation Hospital White Cross Road York YO31 8FT",
+        "agent": "Vital Energi Utilities Ltd",
+        "decision_date": "23/01/26"
+    },
+    "T6LOLJSJI1X00": {
+        "address": "Trinity Methodist Church 43 Monkgate York YO31 7PB",
+        "agent": "Donald Insall Associates Ltd",
+        "decision_date": "16/01/26"
+    },
+    "T701AGSJI5R00": {
+        "address": "5 Gorse Hill Dunnington York YO19 5RF",
+        "agent": "RRAD",
+        "decision_date": "04/02/26"
+    },
+    "T6ZSYBSJI5L00": {
+        "address": "30 Loxley Close York YO30 4XQ",
+        "agent": "Architectural Services York",
+        "decision_date": "04/02/26"
+    },
+    "SR7A9RSJLEG00": {
+        "address": "Mulberry House 7 Stray Garth York YO31 1EL",
+        "agent": "StudioDH",
+        "decision_date": "29/05/25"
+    },
+    "T9XTMJSJIXM00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9XTN1SJIXP00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9XL9LSJIXE00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9XLA5SJIXH00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9XLNNSJ0H300": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9XIONSJ0GB00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9W7A7SJIX500": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T5X2T3SJ0GB00": {
+        "address": "Bell Farm Social Hall Roche Avenue York YO31 9BB",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9VQM0SJIWV00": {
+        "address": "4 St Clements Grove York YO23 1JZ",
+        "agent": "The Planning and Design Associates",
+        "decision_date": null
+    },
+    "T9VID8SJIWQ00": {
+        "address": "Middlethorpe Manor Middlethorpe York YO23 2QB",
+        "agent": "Steel And Maw Tree Experts",
+        "decision_date": null
+    },
+    "T9VIBSSJIWM00": {
+        "address": "10 Riverside Gardens Elvington York YO41 4DT",
+        "agent": "Eleven 07 Architectural Design Ltd",
+        "decision_date": null
+    },
+    "T9VIC1SJIWO00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9U4CTSJIW800": {
+        "address": "Flat 1 8 Colliergate York YO1 8BP",
+        "agent": "Walker Dsp Architects",
+        "decision_date": null
+    },
+    "T9VIDRSJIWS00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9UCM4SJIWD00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9U4EASJIWA00": {
+        "address": "18 Gordon Street York YO10 5BG",
+        "agent": "Farrer Designs (Yorkshire) Ltd",
+        "decision_date": null
+    },
+    "T9U4C3SJIW500": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9U26SSJ0H300": {
+        "address": "83 Back Lane South Wheldrake York YO19 6DT",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9TNOQSJIW100": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9OBXPSJIVG00": {
+        "address": "9 White Rose Grove New Earswick York YO32 4AE",
+        "agent": "MWA Arboriculture Ltd",
+        "decision_date": null
+    },
+    "T9MXYBSJIV400": {
+        "address": "61 Heslington Lane York YO10 4HN",
+        "agent": "Lewis Tree Surgery York Ltd",
+        "decision_date": null
+    },
+    "T9TNO6SJIVY00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9MXY3SJIV200": {
+        "address": "33 The Green Acomb York YO26 5LL",
+        "agent": "Lewis Tree Surgery York Ltd",
+        "decision_date": null
+    },
+    "T9MXXLSJIUZ00": {
+        "address": "92 The Mount York YO24 1AR",
+        "agent": "Lewis Tree Surgery York Ltd",
+        "decision_date": null
+    },
+    "T9OK9HSJIVJ00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9OKBMSJIVM00": {
+        "address": "The Minster Library Minster Yard York YO1 7JD",
+        "agent": "Savills",
+        "decision_date": null
+    },
+    "T9O3MASJIV900": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9OL8LSJ0H300": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9OHS1SJ0GB00": {
+        "address": "132 Osbaldwick Lane York YO10 3BB",
+        "agent": "MTS Architectural Services",
+        "decision_date": null
+    },
+    "T9OBX6SJIVD00": {
+        "address": "Peppermill Court Ramsay Close York YO31 8SS",
+        "agent": "NW Architects",
+        "decision_date": null
+    },
+    "T9MPMGSJIUT00": {
+        "address": "17 Thief Lane York YO10 3HQ",
+        "agent": "Design Associates",
+        "decision_date": null
+    },
+    "T9MS60SJ0H300": {
+        "address": "STREET RECORD Waincroft Strensall York",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9MPMWSJIUW00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9L3DOSJIUC00": {
+        "address": "Richmond Lodge 42 Sim Balk Lane Bishopthorpe York YO23 2QQ",
+        "agent": "Toby H Johnson Ltd",
+        "decision_date": null
+    },
+    "T9L3DJSJIUA00": {
+        "address": "Yearsley Swimming Baths Haleys Terrace York YO31 8SB",
+        "agent": "Toby H Johnson Ltd",
+        "decision_date": null
+    },
+    "T9MHL9SJIUN00": {
+        "address": "Barkers House Shirbutt Lane Hessay York YO26 8JT",
+        "agent": "Harrogate Architectural Ltd",
+        "decision_date": null
+    },
+    "T9L3CESJIU500": {
+        "address": "STREET RECORD Parliament Street York",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9MIHNSJ0GB00": {
+        "address": "Land North West Of Hannam Lane Wetherby Road Rufforth York",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9MHLTSJIUQ00": {
+        "address": "Jigsaw Cottage 3 Church Lane Elvington York YO41 4AD",
+        "agent": "RRAD",
+        "decision_date": null
+    },
+    "T9M9A7SJIUH00": {
+        "address": "Flat 1 13 Park Street York YO24 1BQ",
+        "agent": "Farrer Designs (Yorkshire) Ltd",
+        "decision_date": null
+    },
+    "T9MGLYSJ0GB00": {
+        "address": "23 St Pauls Square York YO24 4BD",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T9KEA4SJITG00": {
+        "address": "8 Nelsons Lane York YO24 1HD",
+        "agent": "Trident Tree Works",
+        "decision_date": null
+    },
+    "T9KUXKSJITY00": {
+        "address": "19 Carr Lane York YO26 5HT",
+        "agent": "RRAD",
+        "decision_date": null
+    },
+    "T9KMM1SJITN00": {
+        "address": "Kokos International Bar 31 - 33 Goodramgate York YO1 7LS",
+        "agent": "Architectural Services York",
+        "decision_date": null
+    },
+    "T9KMM0SJITM00": {
+        "address": "Address not available",
+        "agent": "Independent",
+        "decision_date": null
+    },
+    "T71NMVSJI6C00": {
+        "address": "146 Middleton Road York YO24 3AP",
+        "agent": "Townscape Architects Limited",
+        "decision_date": "04/02/26"
+    },
+    "T70HX5SJI6200": {
+        "address": "Monk Bar Goodramgate York",
+        "agent": "Studio Tamacoco Architects",
+        "decision_date": "04/02/26"
+    },
+    "T6OOXRSJI2W00": {
+        "address": "York District Hospital Wigginton Road York YO31 8HE",
+        "agent": "Vital Energi Utilities Ltd",
+        "decision_date": null
+    }
+}

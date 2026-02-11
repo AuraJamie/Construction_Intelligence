@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>York Construction Intelligence</title>
+    <!-- Google Fonts for premium typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #1a202c;
+            --text-muted: #718096;
+            --primary: #3182ce;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --text-color: #f7fafc;
+            --text-muted: #a0aec0;
+            --primary: #63b3ed;
+            --success: #68d391;
+            --warning: #f6e05e;
+            --danger: #fc8181;
+            --border: #4a5568;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary), #805ad5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Search Panel */
+        .search-panel {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-color);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.2);
+        }
+
+        select[multiple] {
+            height: auto;
+            min-height: 42px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 42px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-color);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            height: auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .stat-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-HAPP,
+        .status-PER,
+        .status-NOBJ {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--success);
+        }
+
+        .status-Pending,
+        .status-PCO,
+        .status-SPL,
+        .status-PDE {
+            background-color: rgba(214, 158, 46, 0.1);
+            color: var(--warning);
+        }
+
+        .status-REF {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: var(--danger);
+        }
+
+        .status-W,
+        .status-WDN,
+        .status-Unknown,
+        .status-null {
+            background-color: var(--bg-color);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .addr-loading {
+            font-style: italic;
+            color: var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Map Popup */
+        .map-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 800px;
+            height: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        #map {
+            flex: 1;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .popup-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+            display: none;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            display: none;
+        }
+
+        [data-theme="dark"] .loading-overlay {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Details Modal */
+        .details-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .details-content {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .details-section {
+            margin-bottom: 30px;
+        }
+
+        .details-section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+            word-break: break-word;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            border-left: 2px solid var(--border);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>York Construction Intelligence</h1>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <span id="syncStatus" style="font-size:13px; color:var(--text-muted);"></span>
+                <button id="syncBtn" class="btn btn-sm" onclick="triggerSync()">
+                    <span id="syncIcon">↻</span> Sync Data
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="toggleTheme()">Toggle Theme</button>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--primary);"></div>
+                <div class="stat-value" id="count-total">-</div>
+                <div class="stat-label">Total Matches Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--success);"></div>
+                <div class="stat-value" id="count-happ">-</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--warning);"></div>
+                <div class="stat-value" id="count-pending">-</div>
+                <div class="stat-label">Pending / In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--danger);"></div>
+                <div class="stat-value" id="count-refused">-</div>
+                <div class="stat-label">Refused</div>
+            </div>
+        </div>
+
+        <!-- Search Panel -->
+        <div class="search-panel">
+            <div class="search-grid">
+                <div class="form-group">
+                    <label for="searchInput">Search Keywords</label>
+                    <input type="text" id="searchInput" class="form-control"
+                        placeholder="Ref, Address, or Description..." onkeypress="handleEnter(event)">
+                </div>
+
+                <div class="form-group">
+                    <label for="statusFilter">Status (Hold Ctrl to Multi-Select)</label>
+                    <select id="statusFilter" class="form-control" multiple size="4">
+                        <option value="ALL" selected>All Statuses</option>
+                        <option value="HAPP">Householder Approved (HAPP)</option>
+                        <option value="PENDING">Pending (All Types)</option>
+                        <option value="REF">Refused (REF)</option>
+                        <option value="PER">Permitted (PER)</option>
+                        <option value="W">Withdrawn</option>
+                        <option value="PCO">Pending Consideration</option>
+                        <option value="SPL">Split Decision</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-outline" type="button" onclick="toggleAdvanced()" style="width:100%">
+                        Advanced Filters
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn" onclick="refreshData()">
+                        Update Results
+                    </button>
+                </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div id="advancedFilters" class="search-grid"
+                style="display:none; margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
+                <div class="form-group">
+                    <label for="agentInput">Agent / Architect</label>
+                    <input type="text" id="agentInput" list="agentList" class="form-control"
+                        placeholder="Start typing..." onkeypress="handleEnter(event)">
+                    <datalist id="agentList">
+                        <!-- Populated by JS -->
+                    </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Received From</label>
+                    <input type="date" id="startDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">Received To</label>
+                    <input type="date" id="endDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-outline btn-sm" onclick="clearFilters()" style="margin-top:25px;">Clear All
+                        Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container" style="position:relative;">
+            <div id="loadingOverlay" class="loading-overlay">Loading Data...</div>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th id="th-received_date" onclick="toggleSort('received_date')"
+                            style="cursor:pointer; user-select:none;">Rec'd</th>
+                        <th id="th-validated_date" onclick="toggleSort('validated_date')"
+                            style="cursor:pointer; user-select:none;">Valid</th>
+                        <th id="th-decision_date" onclick="toggleSort('decision_date')"
+                            style="cursor:pointer; user-select:none;">Decision</th>
+                        <th id="th-ref" onclick="toggleSort('ref')" style="cursor:pointer; user-select:none;">Reference
+                        </th>
+                        <th id="th-status" onclick="toggleSort('status')" style="cursor:pointer; user-select:none;">
+                            Status</th>
+                        <th>Proposal</th>
+                        <th>Address</th>
+                        <th>Agent</th>
+                        <th>Map</th>
+                        <th>Portal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Map Popup -->
+    <div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+    <div class="map-popup" id="mapPopup">
+        <div class="popup-header">
+            <h3 id="mapTitle" style="margin:0">Location</h3>
+            <button class="close-btn" onclick="closeAll()">&times;</button>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="details-modal" id="detailsModal">
+        <div class="popup-header">
+            <h3 style="margin:0; font-size:18px;">Application Details</h3>
+            <button class="close-btn" onclick="closeAll()">&times;</button>
+        </div>
+        <div class="details-content" id="detailsContent">
+            Loading...
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        let map = null;
+        let marker = null;
+        let currentSort = { field: 'date', dir: 'desc' };
+        let fetchQueue = []; // Queue for background updating
+        let isFetching = false;
+
+        // === Init ===
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshData();
+            fetchAgents();
+            checkSyncStatus(); // Initial check
+            setInterval(checkSyncStatus, 10000); // Check every 10s
+        });
+
+        function toggleTheme() {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleAdvanced() {
+            const el = document.getElementById('advancedFilters');
+            el.style.display = el.style.display === 'none' ? 'grid' : 'none';
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') refreshData();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('agentInput').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('statusFilter').value = 'ALL';
+            refreshData();
+        }
+
+        async function fetchAgents() {
+            try {
+                const res = await fetch('/api/agents');
+                const agents = await res.json();
+                const list = document.getElementById('agentList');
+                list.innerHTML = '';
+                agents.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    list.appendChild(opt);
+                });
+            } catch (e) { console.error("Failed to load agents", e); }
+        }
+
+        async function refreshData() {
+            const loader = document.getElementById('loadingOverlay');
+            loader.style.display = 'flex';
+
+            // Gather inputs
+            const search = document.getElementById('searchInput').value;
+            const agent = document.getElementById('agentInput').value;
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+
+            // Status Multiple
+            const statusSelect = document.getElementById('statusFilter');
+            const selectedStatuses = Array.from(statusSelect.selectedOptions).map(opt => opt.value);
+
+            // Build Query
+            const params = new URLSearchParams();
+            selectedStatuses.forEach(s => params.append('status', s));
+            if (search) params.append('search', search);
+            if (agent) params.append('agent', agent);
+            if (start) params.append('start_date', start);
+            if (end) params.append('end_date', end);
+
+            // Sort
+            params.append('sort_by', currentSort.field || 'received_date');
+            params.append('sort_dir', currentSort.dir || 'desc');
+
+            updateSortIcons();
+
+            params.append('limit', 100);
+
+            try {
+                const res = await fetch(`/api/data?${params.toString()}`);
+                const data = await res.json();
+                updateStats(data.stats);
+                updateTable(data.records);
+            } catch (e) {
+                console.error("Error fetching data", e);
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Error loading data. Ensure server is running.</td></tr>';
+            }
+
+            loader.style.display = 'none';
+        }
+
+        function toggleSort(field) {
+            if (currentSort.field === field) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = field;
+                currentSort.dir = 'desc';
+            }
+            refreshData();
+        }
+
+        function updateSortIcons() {
+            const fields = ['received_date', 'validated_date', 'decision_date', 'ref', 'status'];
+            fields.forEach(f => {
+                const th = document.getElementById(`th-${f}`);
+                if (!th) return;
+
+                // Clear existing arrow
+                let text = th.innerText.replace(' ↑', '').replace(' ↓', '');
+
+                if (currentSort.field === f) {
+                    text += currentSort.dir === 'asc' ? ' ↑' : ' ↓';
+                    th.style.color = 'var(--primary)';
+                    th.style.fontWeight = 'bold';
+                } else {
+                    th.style.color = '';
+                    th.style.fontWeight = 'normal';
+                }
+                th.innerText = text;
+            });
+        }
+
+        function updateStats(stats) {
+            document.getElementById('count-total').textContent = stats.total_loaded;
+            document.getElementById('count-happ').textContent = stats.happ_count;
+            document.getElementById('count-pending').textContent = stats.pending_count;
+            document.getElementById('count-refused').textContent = stats.ref_count || 0;
+        }
+
+        function updateTable(records) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            fetchQueue = []; // Clear queue on refresh to prioritize visible items? Or keep separate?
+            // Actually, logic is: add items that NEED scrape to queue.
+
+            if (records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No records found matching filters.</td></tr>';
+                return;
+            }
+
+            records.forEach(record => {
+                const tr = document.createElement('tr');
+                tr.style.cursor = 'pointer';
+                tr.onclick = (e) => {
+                    openDetails(record.keyval);
+                };
+
+                // Map Button
+                let mapLink = '-';
+                if (record.lat && record.lon) {
+                    mapLink = `<button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); showMap(${record.lat}, ${record.lon}, '${record.address.replace(/'/g, "\\'")}')">View</button>`;
+                }
+
+                // Highlight Logic
+                let statusClass = 'status-Unknown';
+                if (record.status) {
+                    if (['HAPP', 'PER', 'NOBJ'].includes(record.status)) statusClass = 'status-HAPP';
+                    else if (record.status === 'REF') statusClass = 'status-REF';
+                    else if (['Pending', 'PCO', 'SPL', 'PDE'].includes(record.status)) statusClass = 'status-Pending';
+                    else if (['W', 'WDN'].includes(record.status)) statusClass = 'status-WDN';
+                }
+
+                // Address & Agent Logic
+                let addressHtml = `<span style="color:var(--text-muted);">${record.address}</span>`;
+                let agentHtml = `<span style="color:var(--text-muted);">${record.agent || '-'}</span>`;
+
+                if (record.address === 'Loading...') {
+                    addressHtml = `<span class="addr-loading" id="addr-${record.keyval}">Fetching...</span>`;
+                    agentHtml = `<span class="addr-loading" id="agent-${record.keyval}">...</span>`;
+                }
+
+                // View Button Logic
+                let viewBtn = `<a id="link-${record.keyval}" href="${record.council_url || '#'}" target="_blank" class="btn btn-sm btn-outline" style="text-decoration:none;" onclick="event.stopPropagation()">View</a>`;
+                if (record.address === 'Address not available' && !record.needs_scrape) {
+                    viewBtn = `<button class="btn btn-sm btn-outline" disabled style="opacity:0.6; cursor:not-allowed;" title="Record not found on public register" onclick="event.stopPropagation()">Offline</button>`;
+                }
+
+                // Queue Logic
+                if (record.needs_scrape) {
+                    if (!fetchQueue.includes(record.keyval)) fetchQueue.push(record.keyval);
+                }
+
+                // Warning Logic (Cross Validation)
+                let warningHtml = '';
+                if (record.validation_warning) {
+                    warningHtml = `<span title="${record.validation_warning}" style="color:red; font-weight:bold; cursor:help; margin-left:5px;">[!]</span>`;
+                }
+
+                tr.innerHTML = `
+                <td style="white-space:nowrap; font-size:13px;">${record.received_date_fmt || '-'}</td>
+                <td style="white-space:nowrap; font-size:13px;">${record.validated_date_fmt || '-'}</td>
+                <td style="white-space:nowrap; font-size:13px;">${record.decision_date_fmt || '-'}</td>
+                <td style="font-weight:bold;">${record.ref}</td>
+                <td>
+                    <span id="status-${record.keyval}" class="status-badge ${statusClass}">${record.status}</span>
+                    ${warningHtml}
+                </td>
+                <td>${record.proposal}</td>
+                <td>${addressHtml}</td>
+                <td>${agentHtml}</td>
+                <td>${mapLink}</td>
+                <td>${viewBtn}</td>
+            `;
+                tbody.appendChild(tr);
+            });
+
+            // Start processing queue if items exist
+            if (fetchQueue.length > 0 && !isFetching) {
+                processFetchQueue();
+            }
+        }
+
+        async function processFetchQueue() {
+            if (fetchQueue.length === 0) {
+                isFetching = false;
+                return;
+            }
+
+            isFetching = true;
+            const keyval = fetchQueue.shift(); // Get next
+            const addrEl = document.getElementById(`addr-${keyval}`);
+            const agentEl = document.getElementById(`agent-${keyval}`);
+            const dateEl = document.getElementById(`date-${keyval}`);
+
+            try {
+                const res = await fetch(`/api/fetch-address/${keyval}`);
+                const data = await res.json();
+
+                // Update Address
+                if (addrEl) {
+                    if (data.address) {
+                        addrEl.textContent = data.address;
+                        addrEl.classList.remove('addr-loading');
+                        addrEl.style.color = 'var(--text-muted)';
+                    } else {
+                        addrEl.textContent = 'Unavailable';
+                    }
+                }
+
+                // Update Agent
+                if (agentEl) {
+                    if (data.agent) {
+                        agentEl.textContent = data.agent;
+                        agentEl.classList.remove('addr-loading');
+                        agentEl.style.color = 'var(--text-muted)';
+                    }
+                }
+
+                // Update Date
+                if (dateEl && data.decision_date) {
+                    dateEl.textContent = data.decision_date;
+                }
+
+                // Update Link (Self-Healing)
+                const linkEl = document.getElementById('link-' + keyval);
+                if (linkEl && data.council_url) {
+                    linkEl.href = data.council_url;
+                }
+
+            } catch (e) {
+                console.error("Fetch failed", e);
+            }
+
+
+            // Delay for 2000ms to be polite and reduce CPU load (0.5 requests per second)
+            setTimeout(processFetchQueue, 2000);
+        }
+
+        function showMap(lat, lon, title) {
+            document.getElementById('backdrop').style.display = 'block';
+            document.getElementById('mapPopup').style.display = 'flex';
+            document.getElementById('mapTitle').innerText = title;
+
+            if (!map) {
+                map = L.map('map').setView([lat, lon], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(map);
+            } else {
+                map.setView([lat, lon], 15);
+                map.invalidateSize();
+            }
+
+            if (marker) map.removeLayer(marker);
+            marker = L.marker([lat, lon]).addTo(map)
+                .bindPopup(title)
+                .openPopup();
+        }
+
+        function closeMap() {
+            document.getElementById('backdrop').style.display = 'none';
+            document.getElementById('mapPopup').style.display = 'none';
+        }
+        async function triggerSync() {
+            const btn = document.getElementById('syncBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="addr-loading">↻</span> Starting...';
+
+            try {
+                const res = await fetch('/api/sync', { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'started') {
+                    checkSyncStatus(); // Start polling immediately
+                } else {
+                    alert(data.message);
+                }
+            } catch (e) {
+                console.error("Sync trigger failed", e);
+                btn.disabled = false;
+                btn.innerHTML = '<span id="syncIcon">↻</span> Sync Data';
+            }
+        }
+
+        async function checkSyncStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+
+                const btn = document.getElementById('syncBtn');
+                const statusEl = document.getElementById('syncStatus');
+
+                if (data.is_syncing) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="addr-loading">↻</span> Syncing...';
+                    statusEl.textContent = 'Sync in progress...';
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span id="syncIcon">↻</span> Sync Data';
+
+                    if (data.last_sync) {
+                        try {
+                            // "2026-02-05 12:10:32..."
+                            const dt = new Date(data.last_sync);
+                            const now = new Date();
+                            const diffMins = Math.floor((now - dt) / 60000);
+
+                            if (diffMins < 1) statusEl.textContent = 'Last synced: Just now';
+                            else if (diffMins < 60) statusEl.textContent = `Last synced: ${diffMins}m ago`;
+                            else statusEl.textContent = `Last synced: ${dt.toLocaleDateString()} ${dt.toLocaleTimeString()}`;
+                        } catch (e) { statusEl.textContent = 'Synced'; }
+                    } else {
+                        statusEl.textContent = 'Never synced';
+                    }
+                }
+            } catch (e) { }
+        }
+        async function openDetails(keyval) {
+            document.getElementById('backdrop').style.display = 'block';
+            document.getElementById('detailsModal').style.display = 'flex';
+            document.getElementById('detailsContent').innerHTML = '<div style="text-align:center; padding:50px;"><span class="addr-loading">Loading Details...</span></div>';
+
+            try {
+                const res = await fetch(`/api/application/${keyval}`);
+                const data = await res.json();
+
+                if (data.error) {
+                    document.getElementById('detailsContent').innerHTML = `<p style="color:red">Error: ${data.error}</p>`;
+                    return;
+                }
+
+                const app = data.application;
+                const hist = data.history;
+
+                let histHtml = '';
+                if (hist.length > 0) {
+                    histHtml = hist.map(h => `
+                        <div class="timeline-item">
+                            <div class="info-label">${new Date(h.change_date).toLocaleString()}</div>
+                            <div class="info-value">Changed from <strong>${h.old_status}</strong> to <strong>${h.new_status}</strong></div>
+                        </div>
+                    `).join('');
+                } else {
+                    histHtml = '<p style="color:var(--text-muted); font-style:italic;">No history recorded yet.</p>';
+                }
+
+                const html = `
+                    <div class="details-section">
+                        <h3>Overview</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Reference</span>
+                                <span class="info-value">${app.reference || app.keyval}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Date Received</span>
+                                <span class="info-value">${app.received_date || '-'}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Date Validated</span>
+                                <span class="info-value">${app.validated_date || '-'}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Date Decided</span>
+                                <span class="info-value">${app.decision_date || '-'}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Current Status</span>
+                                <span class="info-value">${app.status}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Internal Key</span>
+                                <span class="info-value" style="font-family:monospace; font-size:12px;">${app.keyval}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="details-section">
+                        <h3>Location & Agent</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Address</span>
+                                <span class="info-value">${app.address || 'Unavailable'}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Agent</span>
+                                <span class="info-value">${app.agent_name || '-'}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Coordinates</span>
+                                <span class="info-value">${app.latitude}, ${app.longitude}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="details-section">
+                        <h3>Proposal</h3>
+                        <p class="info-value">${app.proposal}</p>
+                    </div>
+                    
+                    <div class="details-section">
+                        <h3>Audit History</h3>
+                        ${histHtml}
+                    </div>
+                    
+                    <div class="details-section">
+                         <h3>System Data</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Last Refreshed (Details)</span>
+                                <span class="info-value">${app.last_scraped_details ? new Date(app.last_scraped_details).toLocaleString() : 'Never'}</span>
+                            </div>
+                             <div class="info-item">
+                                <span class="info-label">Portal Validation</span>
+                                <span class="info-value" style="color:${app.validation_warning ? 'red' : 'green'}">
+                                    ${app.validation_warning || 'Validated OK'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('detailsContent').innerHTML = html;
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('detailsContent').innerHTML = '<p style="color:red">Failed to load details.</p>';
+            }
+        }
+
+        function closeAll() {
+            document.getElementById('backdrop').style.display = 'none';
+            document.getElementById('mapPopup').style.display = 'none';
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        // Alias closeMap for existing calls
+        function closeMap() { closeAll(); }
+    </script>
+
+</body>
+
+</html>
