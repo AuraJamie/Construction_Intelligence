@@ -43,6 +43,17 @@ def init_db():
     )
     ''')
     
+    # Status History Table (Audit Log)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS status_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        keyval TEXT,
+        old_status TEXT,
+        new_status TEXT,
+        change_date TIMESTAMP
+    )
+    ''')
+    
     # Index for fast searching/filtering
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_status ON applications(status);')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_date ON applications(received_date);')
