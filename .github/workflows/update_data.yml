@@ -4,12 +4,15 @@ on:
   schedule:
     - cron: '0 */6 * * *' # Run every 6 hours
   workflow_dispatch: # Allow manual trigger
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
 
 jobs:
   update-data:
+    if: github.event_name != 'issues' || github.event.issue.title == 'Update Data'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -40,3 +43,10 @@ jobs:
           git add data.json
           # Only commit if there are changes
           git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update planning data [skip ci]" && git push)
+
+      - name: Close Issue (if applicable)
+        if: github.event_name == 'issues' && github.event.issue.title == 'Update Data'
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment: "Update triggered successfully! The data will be live in a few minutes."
