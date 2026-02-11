@@ -444,6 +444,11 @@
             <h1>York Construction Intelligence</h1>
             <div style="display:flex; gap:10px; align-items:center;">
                 <span id="syncStatus" style="font-size:13px; color:var(--text-muted);">Static Mode</span>
+                <a href="https://github.com/AuraJamie/Construction_Intelligence/actions" target="_blank"
+                    class="btn btn-sm"
+                    style="text-decoration:none; display:inline-flex; align-items:center; color:white;">
+                    Manage Updates
+                </a>
                 <button class="btn btn-outline btn-sm" onclick="toggleTheme()">Toggle Theme</button>
             </div>
         </div>
@@ -597,7 +602,7 @@
 
         // === Init ===
         document.addEventListener('DOMContentLoaded', () => {
-             loadStaticData();
+            loadStaticData();
         });
 
         async function loadStaticData() {
@@ -607,17 +612,17 @@
                 const res = await fetch('data.json');
                 const json = await res.json();
                 allData = json.applications;
-                
+
                 // Update Timestamp
                 document.getElementById('syncStatus').textContent = 'Last Updated: ' + json.generated_at;
-                
+
                 // Populate Agents
                 populateAgents(json.agents);
-                
+
                 // Initial Render
                 refreshData();
-                
-            } catch(e) {
+
+            } catch (e) {
                 console.error("Failed to load static data", e);
                 document.getElementById('tableBody').innerHTML = '<tr><td colspan="7">Failed to load data.json. Ensure it exists.</td></tr>';
             }
@@ -667,18 +672,18 @@
             const agent = document.getElementById('agentInput').value.toLowerCase();
             const start = document.getElementById('startDate').value;
             const end = document.getElementById('endDate').value;
-            
+
             const statusSelect = document.getElementById('statusFilter');
             const selectedStatuses = Array.from(statusSelect.selectedOptions).map(opt => opt.value);
-            
+
             // Pending Logic
             const pendingStatuses = ['Pending', 'PCO', 'W', 'Unknown', 'SPL', 'PDE'];
-            
+
             currentData = allData.filter(row => {
                 // Status Filter
                 if (!selectedStatuses.includes('ALL')) {
                     let match = false;
-                    for(let s of selectedStatuses) {
+                    for (let s of selectedStatuses) {
                         if (s === 'PENDING') {
                             if (pendingStatuses.includes(row.status)) match = true;
                         } else {
@@ -687,31 +692,31 @@
                     }
                     if (!match) return false;
                 }
-                
+
                 // Search Filter
                 if (search) {
-                     const txt = (row.proposal + ' ' + row.address + ' ' + row.ref + ' ' + row.keyval).toLowerCase();
-                     if (!txt.includes(search)) return false;
+                    const txt = (row.proposal + ' ' + row.address + ' ' + row.ref + ' ' + row.keyval).toLowerCase();
+                    if (!txt.includes(search)) return false;
                 }
-                
+
                 // Agent Filter
                 if (agent) {
                     if (!row.agent || !row.agent.toLowerCase().includes(agent)) return false;
                 }
-                
+
                 // Date Filter
                 if (start && (!row.received_date || row.received_date < start)) return false;
                 if (end && (!row.received_date || row.received_date > end)) return false;
-                
+
                 return true;
             });
-            
+
             // Sort
             sortData();
-            
+
             // Update Stats
             updateStats();
-            
+
             // Render Table (Limit 100)
             updateTable(currentData.slice(0, 100));
         }
@@ -719,7 +724,7 @@
         function sortData() {
             const field = currentSort.field;
             const dir = currentSort.dir === 'asc' ? 1 : -1;
-            
+
             currentData.sort((a, b) => {
                 let vA = a[field] || '';
                 let vB = b[field] || '';
@@ -727,7 +732,7 @@
                 if (vA > vB) return 1 * dir;
                 return 0;
             });
-            
+
             updateSortIcons();
         }
 
@@ -764,7 +769,7 @@
             const happ = currentData.filter(r => ['HAPP', 'PER', 'NOBJ'].includes(r.status)).length;
             const ref = currentData.filter(r => r.status === 'REF').length;
             const pending = currentData.filter(r => ['Pending', 'PCO', 'W', 'Unknown', 'SPL', 'PDE'].includes(r.status)).length;
-            
+
             document.getElementById('count-total').textContent = total;
             document.getElementById('count-happ').textContent = happ;
             document.getElementById('count-pending').textContent = pending;
@@ -854,13 +859,13 @@
         function openDetails(keyval) {
             document.getElementById('backdrop').style.display = 'block';
             document.getElementById('detailsModal').style.display = 'flex';
-            
+
             // Find in current data
             const app = allData.find(r => r.keyval === keyval);
-            
+
             if (!app) {
-                 document.getElementById('detailsContent').innerHTML = '<p style="color:red">Error: Record not found in static data.</p>';
-                 return;
+                document.getElementById('detailsContent').innerHTML = '<p style="color:red">Error: Record not found in static data.</p>';
+                return;
             }
 
             const html = `
@@ -941,4 +946,5 @@
         function closeMap() { closeAll(); }
     </script>
 </body>
+
 </html>
