@@ -59,9 +59,36 @@ def init_db():
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_date ON applications(received_date);')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_needs_scrape ON applications(needs_scrape);')
     
+    # ---------------------------------------------------------
+    # MIGRATION: Check for missing columns (Self-healing schema)
+    # ---------------------------------------------------------
+    cursor.execute("PRAGMA table_info(applications)")
+    columns = [r['name'] for r in cursor.fetchall()]
+    
+    if 'validated_date' not in columns:
+        print("Migrating: Adding 'validated_date' column...")
+        try:
+            cursor.execute("ALTER TABLE applications ADD COLUMN validated_date DATE")
+        except Exception as e:
+            print(f"Migration error: {e}")
+
+    if 'validation_warning' not in columns:
+        print("Migrating: Adding 'validation_warning' column...")
+        try:
+            cursor.execute("ALTER TABLE applications ADD COLUMN validation_warning TEXT")
+        except Exception as e:
+           print(f"Migration error: {e}")
+
+    if 'portal_keyval' not in columns:
+        print("Migrating: Adding 'portal_keyval' column...")
+        try:
+            cursor.execute("ALTER TABLE applications ADD COLUMN portal_keyval TEXT")
+        except Exception as e:
+           print(f"Migration error: {e}")
+
     conn.commit()
     conn.close()
-    print(f"Database {DB_NAME} initialized successfully.")
+    print(f"Database {DB_NAME} initialized/verified successfully.")
 
 if __name__ == "__main__":
     init_db()

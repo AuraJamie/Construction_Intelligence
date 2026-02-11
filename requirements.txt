@@ -1,4 +1,6 @@
-flask
 requests
 pandas
 beautifulsoup4
+lxml
+flask
+openpyxl

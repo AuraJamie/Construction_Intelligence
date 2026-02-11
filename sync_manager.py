@@ -28,9 +28,14 @@ def sync_from_open_data():
     # 1. Fetch Data (CSV for now as it's reliable)
     # Ideally we use API "where objectid > max_id" but CSV is fast enough for 5MB
     print("Downloading CSV via requests...")
+    
+    session = requests.Session()
+    retries = requests.adapters.HTTPAdapter(max_retries=3)
+    session.mount('https://', retries)
+
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
-        response = requests.get(CSV_URL, headers=headers, timeout=30)
+        response = session.get(CSV_URL, headers=headers, timeout=60)
         response.raise_for_status()
         csv_content = response.content.decode('utf-8')
         df = pd.read_csv(io.StringIO(csv_content))
