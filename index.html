@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>York Construction Intelligence (Static)</title>
+    <!-- Google Fonts for premium typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --text-color: #1a202c;
+            --text-muted: #718096;
+            --primary: #3182ce;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --text-color: #f7fafc;
+            --text-muted: #a0aec0;
+            --primary: #63b3ed;
+            --success: #68d391;
+            --warning: #f6e05e;
+            --danger: #fc8181;
+            --border: #4a5568;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary), #805ad5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Search Panel */
+        .search-panel {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            color: var(--text-color);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(49, 130, 206, 0.2);
+        }
+
+        select[multiple] {
+            height: auto;
+            min-height: 42px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 42px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-color);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            height: auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .stat-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        /* Table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--text-muted);
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-HAPP,
+        .status-PER,
+        .status-NOBJ {
+            background-color: rgba(56, 161, 105, 0.1);
+            color: var(--success);
+        }
+
+        .status-Pending,
+        .status-PCO,
+        .status-SPL,
+        .status-PDE {
+            background-color: rgba(214, 158, 46, 0.1);
+            color: var(--warning);
+        }
+
+        .status-REF {
+            background-color: rgba(229, 62, 62, 0.1);
+            color: var(--danger);
+        }
+
+        .status-W,
+        .status-WDN,
+        .status-Unknown,
+        .status-null {
+            background-color: var(--bg-color);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .addr-loading {
+            font-style: italic;
+            color: var(--primary);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Map Popup */
+        .map-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 800px;
+            height: 600px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        #map {
+            flex: 1;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .popup-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+            display: none;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+            display: none;
+        }
+
+        [data-theme="dark"] .loading-overlay {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Details Modal */
+        .details-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .details-content {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .details-section {
+            margin-bottom: 30px;
+        }
+
+        .details-section h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-color);
+            word-break: break-word;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 10px;
+            border-left: 2px solid var(--border);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>York Construction Intelligence</h1>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <span id="syncStatus" style="font-size:13px; color:var(--text-muted);">Static Mode</span>
+                <button class="btn btn-outline btn-sm" onclick="toggleTheme()">Toggle Theme</button>
+            </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--primary);"></div>
+                <div class="stat-value" id="count-total">-</div>
+                <div class="stat-label">Total Matches Found</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--success);"></div>
+                <div class="stat-value" id="count-happ">-</div>
+                <div class="stat-label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--warning);"></div>
+                <div class="stat-value" id="count-pending">-</div>
+                <div class="stat-label">Pending / In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-indicator" style="background-color: var(--danger);"></div>
+                <div class="stat-value" id="count-refused">-</div>
+                <div class="stat-label">Refused</div>
+            </div>
+        </div>
+
+        <!-- Search Panel -->
+        <div class="search-panel">
+            <div class="search-grid">
+                <div class="form-group">
+                    <label for="searchInput">Search Keywords</label>
+                    <input type="text" id="searchInput" class="form-control"
+                        placeholder="Ref, Address, or Description..." onkeypress="handleEnter(event)">
+                </div>
+
+                <div class="form-group">
+                    <label for="statusFilter">Status (Hold Ctrl to Multi-Select)</label>
+                    <select id="statusFilter" class="form-control" multiple size="4">
+                        <option value="ALL" selected>All Statuses</option>
+                        <option value="HAPP">Householder Approved (HAPP)</option>
+                        <option value="PENDING">Pending (All Types)</option>
+                        <option value="REF">Refused (REF)</option>
+                        <option value="PER">Permitted (PER)</option>
+                        <option value="W">Withdrawn</option>
+                        <option value="PCO">Pending Consideration</option>
+                        <option value="SPL">Split Decision</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-outline" type="button" onclick="toggleAdvanced()" style="width:100%">
+                        Advanced Filters
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn" onclick="refreshData()">
+                        Update Results
+                    </button>
+                </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div id="advancedFilters" class="search-grid"
+                style="display:none; margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
+                <div class="form-group">
+                    <label for="agentInput">Agent / Architect</label>
+                    <input type="text" id="agentInput" list="agentList" class="form-control"
+                        placeholder="Start typing..." onkeypress="handleEnter(event)">
+                    <datalist id="agentList">
+                        <!-- Populated by JS -->
+                    </datalist>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Received From</label>
+                    <input type="date" id="startDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate">Received To</label>
+                    <input type="date" id="endDate" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-outline btn-sm" onclick="clearFilters()" style="margin-top:25px;">Clear All
+                        Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container" style="position:relative;">
+            <div id="loadingOverlay" class="loading-overlay">Loading Data...</div>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th id="th-received_date" onclick="toggleSort('received_date')"
+                            style="cursor:pointer; user-select:none;">Rec'd</th>
+                        <th id="th-validated_date" onclick="toggleSort('validated_date')"
+                            style="cursor:pointer; user-select:none;">Valid</th>
+                        <th id="th-decision_date" onclick="toggleSort('decision_date')"
+                            style="cursor:pointer; user-select:none;">Decision</th>
+                        <th id="th-ref" onclick="toggleSort('ref')" style="cursor:pointer; user-select:none;">Reference
+                        </th>
+                        <th id="th-status" onclick="toggleSort('status')" style="cursor:pointer; user-select:none;">
+                            Status</th>
+                        <th>Proposal</th>
+                        <th>Address</th>
+                        <th>Agent</th>
+                        <th>Map</th>
+                        <th>Portal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Map Popup -->
+    <div class="backdrop" id="backdrop" onclick="closeAll()"></div>
+    <div class="map-popup" id="mapPopup">
+        <div class="popup-header">
+            <h3 id="mapTitle" style="margin:0">Location</h3>
+            <button class="close-btn" onclick="closeAll()">&times;</button>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="details-modal" id="detailsModal">
+        <div class="popup-header">
+            <h3 style="margin:0; font-size:18px;">Application Details</h3>
+            <button class="close-btn" onclick="closeAll()">&times;</button>
+        </div>
+        <div class="details-content" id="detailsContent">
+            Loading...
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        let map = null;
+        let marker = null;
+        let currentSort = { field: 'received_date', dir: 'desc' };
+        let allData = []; // Full raw data
+        let currentData = []; // Filtered data
+
+        // === Init ===
+        document.addEventListener('DOMContentLoaded', () => {
+             loadStaticData();
+        });
+
+        async function loadStaticData() {
+            const loader = document.getElementById('loadingOverlay');
+            loader.style.display = 'flex';
+            try {
+                const res = await fetch('data.json');
+                const json = await res.json();
+                allData = json.applications;
+                
+                // Update Timestamp
+                document.getElementById('syncStatus').textContent = 'Last Updated: ' + json.generated_at;
+                
+                // Populate Agents
+                populateAgents(json.agents);
+                
+                // Initial Render
+                refreshData();
+                
+            } catch(e) {
+                console.error("Failed to load static data", e);
+                document.getElementById('tableBody').innerHTML = '<tr><td colspan="7">Failed to load data.json. Ensure it exists.</td></tr>';
+            }
+            loader.style.display = 'none';
+        }
+
+        function populateAgents(agents) {
+            const list = document.getElementById('agentList');
+            list.innerHTML = '';
+            agents.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a;
+                list.appendChild(opt);
+            });
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        function toggleAdvanced() {
+            const el = document.getElementById('advancedFilters');
+            el.style.display = el.style.display === 'none' ? 'grid' : 'none';
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') refreshData();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('agentInput').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('statusFilter').value = 'ALL';
+            refreshData();
+        }
+
+        function refreshData() {
+            // Client-side Filtering
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const agent = document.getElementById('agentInput').value.toLowerCase();
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+            
+            const statusSelect = document.getElementById('statusFilter');
+            const selectedStatuses = Array.from(statusSelect.selectedOptions).map(opt => opt.value);
+            
+            // Pending Logic
+            const pendingStatuses = ['Pending', 'PCO', 'W', 'Unknown', 'SPL', 'PDE'];
+            
+            currentData = allData.filter(row => {
+                // Status Filter
+                if (!selectedStatuses.includes('ALL')) {
+                    let match = false;
+                    for(let s of selectedStatuses) {
+                        if (s === 'PENDING') {
+                            if (pendingStatuses.includes(row.status)) match = true;
+                        } else {
+                            if (row.status === s) match = true;
+                        }
+                    }
+                    if (!match) return false;
+                }
+                
+                // Search Filter
+                if (search) {
+                     const txt = (row.proposal + ' ' + row.address + ' ' + row.ref + ' ' + row.keyval).toLowerCase();
+                     if (!txt.includes(search)) return false;
+                }
+                
+                // Agent Filter
+                if (agent) {
+                    if (!row.agent || !row.agent.toLowerCase().includes(agent)) return false;
+                }
+                
+                // Date Filter
+                if (start && (!row.received_date || row.received_date < start)) return false;
+                if (end && (!row.received_date || row.received_date > end)) return false;
+                
+                return true;
+            });
+            
+            // Sort
+            sortData();
+            
+            // Update Stats
+            updateStats();
+            
+            // Render Table (Limit 100)
+            updateTable(currentData.slice(0, 100));
+        }
+
+        function sortData() {
+            const field = currentSort.field;
+            const dir = currentSort.dir === 'asc' ? 1 : -1;
+            
+            currentData.sort((a, b) => {
+                let vA = a[field] || '';
+                let vB = b[field] || '';
+                if (vA < vB) return -1 * dir;
+                if (vA > vB) return 1 * dir;
+                return 0;
+            });
+            
+            updateSortIcons();
+        }
+
+        function toggleSort(field) {
+            if (currentSort.field === field) {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.field = field;
+                currentSort.dir = 'desc';
+            }
+            refreshData(); // Re-runs sortData
+        }
+
+        function updateSortIcons() {
+            const fields = ['received_date', 'validated_date', 'decision_date', 'ref', 'status'];
+            fields.forEach(f => {
+                const th = document.getElementById(`th-${f}`);
+                if (!th) return;
+                let text = th.innerText.replace(' ↑', '').replace(' ↓', '');
+                if (currentSort.field === f) {
+                    text += currentSort.dir === 'asc' ? ' ↑' : ' ↓';
+                    th.style.color = 'var(--primary)';
+                    th.style.fontWeight = 'bold';
+                } else {
+                    th.style.color = '';
+                    th.style.fontWeight = 'normal';
+                }
+                th.innerText = text;
+            });
+        }
+
+        function updateStats() {
+            const total = currentData.length;
+            const happ = currentData.filter(r => ['HAPP', 'PER', 'NOBJ'].includes(r.status)).length;
+            const ref = currentData.filter(r => r.status === 'REF').length;
+            const pending = currentData.filter(r => ['Pending', 'PCO', 'W', 'Unknown', 'SPL', 'PDE'].includes(r.status)).length;
+            
+            document.getElementById('count-total').textContent = total;
+            document.getElementById('count-happ').textContent = happ;
+            document.getElementById('count-pending').textContent = pending;
+            document.getElementById('count-refused').textContent = ref;
+        }
+
+        function updateTable(records) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No records found matching filters.</td></tr>';
+                return;
+            }
+
+            records.forEach(record => {
+                const tr = document.createElement('tr');
+                tr.style.cursor = 'pointer';
+                tr.onclick = (e) => openDetails(record.keyval);
+
+                // Map Button
+                let mapLink = '-';
+                if (record.lat && record.lon) {
+                    mapLink = `<button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); showMap(${record.lat}, ${record.lon}, '${record.address.replace(/'/g, "\\'")}')">View</button>`;
+                }
+
+                // Highlight Logic
+                let statusClass = 'status-Unknown';
+                if (record.status) {
+                    if (['HAPP', 'PER', 'NOBJ'].includes(record.status)) statusClass = 'status-HAPP';
+                    else if (record.status === 'REF') statusClass = 'status-REF';
+                    else if (['Pending', 'PCO', 'SPL', 'PDE'].includes(record.status)) statusClass = 'status-Pending';
+                    else if (['W', 'WDN'].includes(record.status)) statusClass = 'status-WDN';
+                }
+
+                // Address & Agent logic (Already static)
+                let addressHtml = `<span style="color:var(--text-muted);">${record.address}</span>`;
+                let agentHtml = `<span style="color:var(--text-muted);">${record.agent || '-'}</span>`;
+
+                let viewBtn = `<a href="${record.council_url}" target="_blank" class="btn btn-sm btn-outline" style="text-decoration:none;" onclick="event.stopPropagation()">View Portal</a>`;
+
+                let warningHtml = '';
+                if (record.validation_warning) {
+                    warningHtml = `<span title="${record.validation_warning}" style="color:red; font-weight:bold; cursor:help; margin-left:5px;">[!]</span>`;
+                }
+
+                tr.innerHTML = `
+                <td style="white-space:nowrap; font-size:13px;">${record.received_date_fmt}</td>
+                <td style="white-space:nowrap; font-size:13px;">${record.validated_date_fmt}</td>
+                <td style="white-space:nowrap; font-size:13px;">${record.decision_date_fmt}</td>
+                <td style="font-weight:bold;">${record.ref}</td>
+                <td>
+                    <span class="status-badge ${statusClass}">${record.status}</span>
+                    ${warningHtml}
+                </td>
+                <td>${record.proposal}</td>
+                <td>${addressHtml}</td>
+                <td>${agentHtml}</td>
+                <td>${mapLink}</td>
+                <td>${viewBtn}</td>
+            `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showMap(lat, lon, title) {
+            document.getElementById('backdrop').style.display = 'block';
+            document.getElementById('mapPopup').style.display = 'flex';
+            document.getElementById('mapTitle').innerText = title;
+
+            if (!map) {
+                map = L.map('map').setView([lat, lon], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(map);
+            } else {
+                map.setView([lat, lon], 15);
+                map.invalidateSize();
+            }
+
+            if (marker) map.removeLayer(marker);
+            marker = L.marker([lat, lon]).addTo(map)
+                .bindPopup(title)
+                .openPopup();
+        }
+
+        function openDetails(keyval) {
+            document.getElementById('backdrop').style.display = 'block';
+            document.getElementById('detailsModal').style.display = 'flex';
+            
+            // Find in current data
+            const app = allData.find(r => r.keyval === keyval);
+            
+            if (!app) {
+                 document.getElementById('detailsContent').innerHTML = '<p style="color:red">Error: Record not found in static data.</p>';
+                 return;
+            }
+
+            const html = `
+                <div class="details-section">
+                    <h3>Overview</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Reference</span>
+                            <span class="info-value">${app.ref}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Date Received</span>
+                            <span class="info-value">${app.received_date_fmt}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Date Validated</span>
+                            <span class="info-value">${app.validated_date_fmt}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Date Decided</span>
+                            <span class="info-value">${app.decision_date_fmt}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Current Status</span>
+                            <span class="info-value">${app.status}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Internal Key</span>
+                            <span class="info-value" style="font-family:monospace; font-size:12px;">${app.keyval}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-section">
+                    <h3>Location & Agent</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Address</span>
+                            <span class="info-value">${app.address}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Agent</span>
+                            <span class="info-value">${app.agent}</span>
+                        </div>
+                         <div class="info-item">
+                            <span class="info-label">Coordinates</span>
+                            <span class="info-value">${app.lat}, ${app.lon}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="details-section">
+                    <h3>Proposal</h3>
+                    <p class="info-value">${app.proposal}</p>
+                </div>
+                
+                <div class="details-section">
+                     <h3>System Data</h3>
+                    <div class="info-grid">
+                         <div class="info-item">
+                            <span class="info-label">Portal Validation</span>
+                            <span class="info-value" style="color:${app.validation_warning ? 'red' : 'green'}">
+                                ${app.validation_warning || 'Validated OK'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailsContent').innerHTML = html;
+        }
+
+        function closeAll() {
+            document.getElementById('backdrop').style.display = 'none';
+            document.getElementById('mapPopup').style.display = 'none';
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+
+        function closeMap() { closeAll(); }
+    </script>
+</body>
+</html>
