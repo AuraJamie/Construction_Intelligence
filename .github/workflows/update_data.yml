@@ -32,13 +32,15 @@ jobs:
           pip install -r requirements.txt
 
       - name: Initialize Database
-        run: python database.py
+        run: python -u database.py
 
       - name: Run Sync Manager
-        run: python sync_manager.py
+        run: python -u sync_manager.py
+        continue-on-error: true
 
       - name: Generate Static Data
-        run: python gh_pages_generator.py
+        run: python -u gh_pages_generator.py
+        continue-on-error: true
 
       - name: Commit and Push changes
         run: |
