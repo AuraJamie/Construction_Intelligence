@@ -41,11 +41,9 @@ jobs:
 
       - name: Run Sync Manager
         run: python -u sync_manager.py
-        continue-on-error: true
 
       - name: Generate Static Data
         run: python -u gh_pages_generator.py
-        continue-on-error: true
 
       - name: Commit and Push changes
         run: |

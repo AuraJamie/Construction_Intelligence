@@ -27,13 +27,18 @@ def sync_from_open_data():
     
     # 1. Fetch Data (CSV for now as it's reliable)
     # Ideally we use API "where objectid > max_id" but CSV is fast enough for 5MB
-    print("Downloading CSV...")
+    print("Downloading CSV via requests...")
     try:
-        df = pd.read_csv(CSV_URL)
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
+        response = requests.get(CSV_URL, headers=headers, timeout=30)
+        response.raise_for_status()
+        csv_content = response.content.decode('utf-8')
+        df = pd.read_csv(io.StringIO(csv_content))
         print(f"Downloaded {len(df)} records.")
     except Exception as e:
-        print(f"Download failed: {e}")
-        return
+        print(f"Download FAILED: {type(e).__name__}: {e}")
+        # Re-raise to ensure workflow knows it failed
+        raise e
 
     # 2. Process & Upsert
     # Fields: DATEAPRECV, DCSTAT, KEYVAL, OBJ, PROPOSAL, LATITUDE, LONGITUDE, REF, ADDRESS?

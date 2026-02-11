@@ -26,6 +26,7 @@ def init_db():
         proposal TEXT,
         status TEXT,
         received_date DATE,
+        validated_date DATE, -- Missing column fixed
         decision_date DATE,
         agent_name TEXT,
         latitude REAL,
@@ -36,7 +37,9 @@ def init_db():
         source_object_id INTEGER, -- ArcGIS Object ID
         last_synced_api TIMESTAMP, -- When we fetched from ArcGIS
         last_scraped_details TIMESTAMP, -- When we visited Idox
-        needs_scrape BOOLEAN DEFAULT 1 -- Priority flag for scraper
+        needs_scrape BOOLEAN DEFAULT 1, -- Priority flag for scraper
+        portal_keyval TEXT, -- Alternate key for scraping
+        validation_warning TEXT -- Warning validation messages
     )
     ''')
     
