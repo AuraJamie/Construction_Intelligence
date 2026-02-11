@@ -607,7 +607,7 @@
             const loader = document.getElementById('loadingOverlay');
             loader.style.display = 'flex';
             try {
-                const res = await fetch('data.json');
+                const res = await fetch('data.json?t=' + new Date().getTime());
                 const json = await res.json();
                 allData = json.applications;
 

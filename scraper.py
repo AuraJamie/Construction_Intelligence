@@ -61,6 +61,10 @@ def scrape_application_details(keyval, reference=None):
                         print(f"Failed to parse new keyval: {ex}")
 
         # --- Step 1: Parse Summary (Date & Address Fallback) ---
+        url_summary = f"https://planningaccess.york.gov.uk/online-applications/applicationDetails.do?activeTab=summary&keyVal={active_kv}"
+        res_summary = session.get(url_summary, headers=HEADERS, timeout=15)
+        res_summary.raise_for_status() # Check for 403/500
+        
         soup_sum = BeautifulSoup(res_summary.text, 'html.parser')
         
         # Date
@@ -89,25 +93,34 @@ def scrape_application_details(keyval, reference=None):
              addr_th = soup_sum.find('th', string=lambda t: t and 'Address' in t)
              if addr_th:
                  td = addr_th.find_next_sibling('td')
-                 if td: details['address'] = td.get_text(strip=True)
+                 if td: 
+                    addr_text = td.get_text(strip=True)
+                    if addr_text: details['address'] = addr_text
 
         # --- Step 2: Parse Details Tab (Agent & Primary Address) ---
         url_details = f"https://planningaccess.york.gov.uk/online-applications/applicationDetails.do?activeTab=details&keyVal={active_kv}"
         res_details = session.get(url_details, headers=HEADERS, timeout=15)
+        res_details.raise_for_status()
+        
         soup_det = BeautifulSoup(res_details.text, 'html.parser')
         
         # Agent
         agent_th = soup_det.find('th', string=lambda t: t and 'Agent Company Name' in t)
         if agent_th:
             td = agent_th.find_next_sibling('td')
-            if td: details['agent'] = td.get_text(strip=True)
+            if td: 
+                agent_text = td.get_text(strip=True)
+                if agent_text: details['agent'] = agent_text
             
         # Address (Primary check)
-        if not details['address']:
-            addr_th = soup_det.find('th', string=lambda t: t and 'Address' in t)
-            if addr_th:
-                td = addr_th.find_next_sibling('td')
-                if td: details['address'] = td.get_text(strip=True)
+        # Override summary address if detailed one is found? Usually they are same.
+        # But details tab is authoritative.
+        addr_th = soup_det.find('th', string=lambda t: t and 'Address' in t)
+        if addr_th:
+            td = addr_th.find_next_sibling('td')
+            if td: 
+                addr_text = td.get_text(strip=True)
+                if addr_text: details['address'] = addr_text
         
         details['success'] = True
         
