@@ -172,47 +172,95 @@ def sync_from_open_data():
         print(f"Live sync error: {e}")
 
     # 4. Targeted Backfill for Missing Decision Dates
-    # If status suggests a decision but date is missing, force a scrape.
+    # 4. robust Scraping (Address, Agent, Decision Date)
+    # Target applications that need scraping (new or updated status)
     conn = get_db_connection()
     c = conn.cursor()
-    # Common decision statuses: HAPP, PER, REF, APP, CDN, NOBJ
+    
+    # Priority: Newest applications first (received_date DESC)
+    # Limit to 50 per run to avoid timeout/blocking (run every 6 hours = 200/day)
     rows = c.execute("""
-        SELECT keyval, reference FROM applications 
-        WHERE status IN ('HAPP', 'PER', 'REF', 'APP', 'CDN', 'NOBJ', 'SPL', 'WDN') 
-        AND decision_date IS NULL
-        LIMIT 50
+        SELECT keyval, reference, status FROM applications 
+        WHERE needs_scrape = 1 
+        ORDER BY received_date DESC 
+        LIMIT 500
     """).fetchall()
     
     if rows:
-        print(f"Found {len(rows)} decided applications with missing decision dates. Scraping details...")
+        print(f"Found {len(rows)} applications needing details. Scraping (max 50)...")
         import scraper
+        import time
         count = 0
+        
         for r in rows:
             kv = r['keyval']
-            # ref = r['reference'] # Pass ref for self-healing if needed
-            print(f"Backfilling date for {kv}...")
+            # ref = r['reference'] 
+            print(f"Scraping details for {kv}...")
+            
             try:
                 # Scrape
                 details = scraper.scrape_application_details(kv)
-                if details['success'] and details['decision_date']:
-                     # Update DB
-                     # details['decision_date'] is dd/mm/yy (e.g. 10/02/26)
-                     # Convert to YYYY-MM-DD
-                     d_str = details['decision_date']
-                     try:
-                         dt = datetime.strptime(d_str, '%d/%m/%y')
-                         db_date = dt.strftime('%Y-%m-%d')
-                         c.execute("UPDATE applications SET decision_date = ? WHERE keyval = ?", (db_date, kv))
-                         count += 1
-                     except: 
-                        print(f"Date parse error for {d_str}")
+                
+                if details['success']:
+                     # Prepare Updates
+                     updates = []
+                     start_params = []
+                     
+                     # Address
+                     if details['address']:
+                         updates.append("address = ?")
+                         start_params.append(details['address'])
+                         
+                     # Agent
+                     if details['agent']:
+                         updates.append("agent_name = ?")
+                         start_params.append(details['agent'])
+                         
+                     # Decision Date
+                     # Convert dd/mm/yy -> YYYY-MM-DD
+                     db_date = None
+                     if details['decision_date']:
+                         try:
+                             dt = datetime.strptime(details['decision_date'], '%d/%m/%y')
+                             db_date = dt.strftime('%Y-%m-%d')
+                             updates.append("decision_date = ?")
+                             start_params.append(db_date)
+                         except: pass
+
+                     # Portal Keyval (Self-healing)
+                     if details['portal_keyval']:
+                         updates.append("portal_keyval = ?")
+                         start_params.append(details['portal_keyval'])
+
+                     # Always update meta
+                     updates.append("last_scraped_details = ?")
+                     start_params.append(datetime.now())
+                     
+                     updates.append("needs_scrape = 0")
+                     
+                     # Validation Warning (Phase 3 Idea - optional)
+                     # if details['scraped_status'] != ...
+                     
+                     sql = f"UPDATE applications SET {', '.join(updates)} WHERE keyval = ?"
+                     start_params.append(kv)
+                     
+                     c.execute(sql, start_params)
+                     count += 1
+                     print(f"Updated {kv}: Addr={bool(details['address'])}, Agent={bool(details['agent'])}")
+                     
                 else:
-                    print(f"Scrape failed/no date for {kv}")
+                    print(f"Scrape failed for {kv}: {details.get('error')}")
+                    # Maybe increment a retry counter? For now, leave needs_scrape=1 to retry next time
+                    # Or set to 0 if we want to give up? Let's leave it 1 but maybe add 'failed_attempts' column later.
+                    
             except Exception as e:
-                print(f"Backfill error {kv}: {e}")
+                print(f"Scrape loop error {kv}: {e}")
+                
+            # Polite Delay
+            time.sleep(1)
                 
         conn.commit()
-        print(f"Backfilled {count} decision dates.")
+        print(f"Scraped and updated {count} applications.")
     
     conn.close()
 
